@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { GameState, Commodity, InventoryItem, BankAccount, GameEvent } from '../types';
 import { updatePrices, canAfford } from '../utils/economyUtils';
 import { getRandomEvent, shouldTriggerEvent } from '../utils/eventUtils';
-import { createInitialState, Language } from '../utils/initUtils';
+import { createInitialState } from '../utils/initUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 
