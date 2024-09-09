@@ -1,7 +1,8 @@
 import { GameState, GameEvent } from '../types';
 import { eventTranslations } from '../locales/translations';
+import { EventType } from '../types';
 
-const createEvent = (type: string, description: string, effect: (state: GameState) => GameState): GameEvent => ({
+const createEvent = (type: EventType, description: string, effect: (state: GameState) => GameState): GameEvent => ({
     type,
     description,
     effect
@@ -54,7 +55,8 @@ const events: GameEvent[] = [
 
 export function getRandomEvent(language: string): GameEvent {
     const event = events[Math.floor(Math.random() * events.length)];
-    return { ...event, description: eventTranslations[language][event.description] };
+    const translatedDescription = eventTranslations[language][event.description] || event.description;
+    return { ...event, description: translatedDescription };
 }
 
 export function shouldTriggerEvent(): boolean {

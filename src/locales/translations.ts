@@ -29,7 +29,7 @@ export const translations: { [key: string]: { [key: string]: { [key: string]: st
     },
 };
 
-export const eventTranslations = {
+export const eventTranslations: { [key: string]: { [key: string]: string } } = {
     zh: {
         "EVENT_MARKET_CRASH": "市场崩溃！所有商品价格下跌20%",
         "EVENT_ECONOMIC_BOOM": "经济繁荣！所有商品价格上涨15%",
