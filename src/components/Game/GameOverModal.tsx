@@ -23,11 +23,11 @@ const GameOverModal: React.FC<GameOverModalProps> = ({ isOpen, onClose, won, fin
         <Modal isOpen={isOpen} onClose={onClose} title={won ? t('game_won') : t('game_over')}>
             <div className="space-y-4">
                 {won ? (
-                    <p className="text-lg">{t('game_won_message')}: {finalWealth.toFixed(2)}</p>
+                    <p className="text-lg">{t('game_won_message')}</p>
                 ) : finalHealth === 0 ? (
                     <p className="text-lg">{t('game_over_health_message')}</p>
                 ) : (
-                    <p className="text-lg">{t('game_over_message')}: {finalWealth.toFixed(2)}</p>
+                    <p className="text-lg">{t('game_over_message')}</p>
                 )}
                 <p className="text-md">{t('final_wealth')}: {finalWealth.toFixed(2)}</p>
                 <Button onClick={handleRestart}>{t('restart')}</Button>
