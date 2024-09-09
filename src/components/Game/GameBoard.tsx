@@ -49,7 +49,7 @@ const GameBoard: React.FC = () => {
     };
 
     const handleRandomEvent = () => {
-        if (Math.random() < 0.5) { // 修正为 50% 触发概率
+        if (Math.random() < 0.8) { // 修正为 50% 触发概率
             const event = getRandomEvent(language);
             setCurrentEvent(event);
             setShowEventModal(true);
