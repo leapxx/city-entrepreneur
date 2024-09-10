@@ -41,12 +41,20 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
 
     const handleSell = (commodityId: string) => {
         const isMobile = window.innerWidth < 768;
-        const quantity = isMobile ? 1 : (parseInt(quantities[commodityId]) || 0);
+        const quantity = isMobile ? 1 : (parseInt(quantities[commodityId]) || 1);
         const item = inventory.find(i => i.commodityId === commodityId);
 
         if (quantity > 0 && quantity <= (item?.quantity || 0)) {
             onSell(commodityId, quantity);
             setQuantities({ ...quantities, [commodityId]: '' });
+        }
+    };
+
+    const handleMaxQuantity = (commodityId: string) => {
+        const item = inventory.find(i => i.commodityId === commodityId);
+        if (item) {
+            setQuantities({ ...quantities, [commodityId]: item.quantity.toString() });
+            setErrors({ ...errors, [commodityId]: '' });
         }
     };
 
@@ -74,24 +82,30 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
                                         <TableCell>{item.quantity}</TableCell>
                                         <TableCell>{item.averagePrice.toFixed(2)}</TableCell>
                                         <TableCell className="hidden md:table-cell">
-                                            <div>
+                                            <div className="flex items-center">
                                                 <Input
                                                     type="number"
                                                     value={quantities[item.commodityId] || ''}
                                                     onChange={(e) => handleQuantityChange(item.commodityId, e.target.value)}
-                                                    className={`w-full ${errors[item.commodityId] ? 'border-red-500' : ''}`}
+                                                    className={`w-14 sm:w-16 md:w-18 mr-2 ${errors[item.commodityId] ? 'border-red-500' : ''}`}
                                                     min={0}
                                                     max={item.quantity}
                                                 />
-                                                {errors[item.commodityId] && (
-                                                    <p className="text-red-500 text-sm mt-1">{errors[item.commodityId]}</p>
-                                                )}
+                                                <Button
+                                                    onClick={() => handleMaxQuantity(item.commodityId)}
+                                                    className="bg-blue-500 hover:bg-blue-600 text-xs px-2 py-1"
+                                                >
+                                                    {t('max')}
+                                                </Button>
                                             </div>
+                                            {errors[item.commodityId] && (
+                                                <p className="text-red-500 text-sm mt-1">{errors[item.commodityId]}</p>
+                                            )}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className='w-18 sm:w-20 md:w-22'>
                                             <Button
                                                 onClick={() => handleSell(item.commodityId)}
-                                                className="bg-red-500 hover:bg-red-600 w-full text-sm px-2 py-1"
+                                                className="bg-red-500 hover:bg-red-600 w-full text-sm px-2 py-1 mr-2"
                                             >
                                                 {t('sell')}
                                             </Button>

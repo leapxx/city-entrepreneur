@@ -75,9 +75,13 @@ const GameBoard: React.FC = () => {
                     {t('gameInstruction')}
                 </div>
                 <StatusBar player={state.player} week={state.week} />
-                <div className="game-content grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                    <Market market={state.market} onBuy={buy} playerMoney={state.player.money} />
-                    <Inventory inventory={state.player.inventory} market={state.market} onSell={sell} />
+                <div className="game-content grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
+                    <div className="w-full mx-auto">
+                        <Market market={state.market} onBuy={buy} playerMoney={state.player.money} />
+                    </div>
+                    <div className="w-full mx-auto">
+                        <Inventory inventory={state.player.inventory} market={state.market} onSell={sell} />
+                    </div>
                 </div>
                 <FunctionButtons
                     onBankClick={handleBankClick}
