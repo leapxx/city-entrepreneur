@@ -45,8 +45,8 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
                     <TableHeader>
                         <TableRow>
                             <TableHead className="text-blue-600">{t('commodity')}</TableHead>
-                            <TableHead className="text-blue-600 hidden sm:table-cell">{t('current_price')}</TableHead>
-                            <TableHead className="text-blue-600 hidden md:table-cell">{t('last_price')}</TableHead>
+                            <TableHead className="text-blue-600">{t('current_price')}</TableHead>
+                            <TableHead className="text-blue-600 hidden sm:table-cell">{t('last_price')}</TableHead>
                             <TableHead className="text-blue-600">{t('quantity')}</TableHead>
                             <TableHead className="text-blue-600">{t('operation')}</TableHead>
                         </TableRow>
@@ -58,13 +58,13 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
                             return (
                                 <TableRow key={commodity.id}>
                                     <TableCell className="whitespace-nowrap">{commodityList[commodity.id]}</TableCell>
-                                    <TableCell className={`${priceColor} hidden sm:table-cell whitespace-nowrap`}>
+                                    <TableCell className={`${priceColor} whitespace-nowrap`}>
                                         {commodity.price.toFixed(2)}
                                         {priceChange !== 0 && (
                                             priceChange > 0 ? <ArrowUpIcon className="inline ml-1" /> : <ArrowDownIcon className="inline ml-1" />
                                         )}
                                     </TableCell>
-                                    <TableCell className="hidden md:table-cell whitespace-nowrap">
+                                    <TableCell className="hidden sm:table-cell whitespace-nowrap">
                                         {commodity.lastPrice !== undefined ? `${commodity.lastPrice.toFixed(2)}` : t('no_data')}
                                     </TableCell>
                                     <TableCell>
@@ -72,7 +72,7 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
                                             type="number"
                                             value={quantities[commodity.id] || 0}
                                             onChange={(e) => handleQuantityChange(commodity.id, parseInt(e.target.value) || 0)}
-                                            className="w-20"
+                                            className="w-full"
                                             min={0}
                                             max={Math.floor(playerMoney / commodity.price)}
                                         />

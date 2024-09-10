@@ -43,8 +43,8 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="text-green-600">{t('commodity')}</TableHead>
-                            <TableHead className="text-green-600 hidden sm:table-cell">{t('quantity')}</TableHead>
-                            <TableHead className="text-green-600 hidden md:table-cell">{t('average_price')}</TableHead> {/* 新增列 */}
+                            <TableHead className="text-green-600">{t('quantity')}</TableHead>
+                            <TableHead className="text-green-600">{t('average_price')}</TableHead>
                             <TableHead className="text-green-600">{t('sell_quantity')}</TableHead>
                             <TableHead className="text-green-600">{t('operation')}</TableHead>
                         </TableRow>
@@ -55,10 +55,10 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
                             return (
                                 <TableRow key={item.commodityId}>
                                     <TableCell>{commodity?.name}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{item.quantity}</TableCell>
-                                    <TableCell className="hidden md:table-cell">{item.averagePrice.toFixed(2)}</TableCell> {/* 新增单元格 */}
+                                    <TableCell>{item.quantity}</TableCell>
+                                    <TableCell>{item.averagePrice.toFixed(2)}</TableCell>
                                     <TableCell>
-                                        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                                        <div className="flex flex-col items-center space-y-2">
                                             <Input
                                                 type="number"
                                                 value={quantities[item.commodityId] || 0}
@@ -70,12 +70,12 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
                                                 onValueChange={(value) => handleQuantityChange(item.commodityId, value[0])}
                                                 max={item.quantity}
                                                 step={1}
-                                                className="w-32"
+                                                className="w-full"
                                             />
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <Button onClick={() => handleSell(item.commodityId)} className="bg-red-500 hover:bg-red-600 w-full sm:w-auto">{t('sell')}</Button>
+                                        <Button onClick={() => handleSell(item.commodityId)} className="bg-red-500 hover:bg-red-600 w-full">{t('sell')}</Button>
                                     </TableCell>
                                 </TableRow>
                             );
