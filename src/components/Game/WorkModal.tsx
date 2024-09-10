@@ -11,10 +11,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 interface WorkModalProps {
     isOpen: boolean;
     onClose: () => void;
+    reputation: number;
     onWork: (salary: number, healthCost: number) => void;
 }
 
-const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, onWork }) => {
+const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, reputation, onWork }) => {
     const { t, language } = useLanguage();
     const [workList, setWorkList] = useState<Work[]>(newWorkList);
     const [isWorking, setIsWorking] = useState(false);
@@ -32,8 +33,13 @@ const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, onWork }) => {
     }, []);
 
     const handleSelectWork = (work: Work) => {
-        // 根据工作的拒绝率判断是否被拒绝
-        const isRejected = Math.random() < work.rejectionRate;
+        // 根据名声调整拒绝率
+        const reputationFactor = Math.max(0, 1 - reputation / 100); // 名声越高，这个因子越小
+        const adjustedRejectionRate = work.rejectionRate * reputationFactor;
+
+        console.log("adjustedRejectionRate: ", adjustedRejectionRate);
+        // 根据调整后的拒绝率判断是否被拒绝
+        const isRejected = Math.random() < adjustedRejectionRate;
 
         if (isRejected) {
             // 如果被拒绝，显示消息并不开始工作

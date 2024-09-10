@@ -12,7 +12,7 @@ import EventModal from './EventModal';
 import GameOverModal from './GameOverModal';
 import WorkModal from './WorkModal';
 import { Card, CardContent } from '@/components/ui/card';
-import { getRandomEvent } from '@/utils/eventUtils';
+import { getRandomEvent, getNothingEvent } from '@/utils/eventUtils';
 import { GameEvent } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -49,8 +49,13 @@ const GameBoard: React.FC = () => {
     };
 
     const handleRandomEvent = () => {
-        if (Math.random() < 0.8) { // 修正为 50% 触发概率
+        if (Math.random() < 0.5) { // 修正为 50% 触发概率
             const event = getRandomEvent(language);
+            setCurrentEvent(event);
+            setShowEventModal(true);
+            applyEvent(event); // 应用事件效果
+        } else {
+            const event = getNothingEvent(language);
             setCurrentEvent(event);
             setShowEventModal(true);
             applyEvent(event); // 应用事件效果
@@ -108,6 +113,7 @@ const GameBoard: React.FC = () => {
                     <WorkModal
                         isOpen={showWorkModal}
                         onClose={() => setShowWorkModal(false)}
+                        reputation={state.player.reputation}
                         onWork={work}
                     />
                 )}
