@@ -128,7 +128,7 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
                                                         value={quantities[commodity.id] || ''}
                                                         onChange={(e) => handleQuantityChange(commodity.id, e.target.value)}
                                                         className={cn(
-                                                            "w-12 md:w-14 lg:w-16 mr-1 md:mr-2 text-xs sm:text-sm",
+                                                            "w-12 md:w-16 lg:w-20 xl:w-24 mr-1 md:mr-2 text-xs sm:text-sm",
                                                             errors[commodity.id] ? "border-red-500" : ""
                                                         )}
                                                         min={0}

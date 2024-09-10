@@ -87,7 +87,7 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
                                                     type="number"
                                                     value={quantities[item.commodityId] || ''}
                                                     onChange={(e) => handleQuantityChange(item.commodityId, e.target.value)}
-                                                    className={`w-14 sm:w-16 md:w-18 mr-2 ${errors[item.commodityId] ? 'border-red-500' : ''}`}
+                                                    className={`w-12 md:w-16 lg:w-20 xl:w-24 mr-2 ${errors[item.commodityId] ? 'border-red-500' : ''}`}
                                                     min={0}
                                                     max={item.quantity}
                                                 />
