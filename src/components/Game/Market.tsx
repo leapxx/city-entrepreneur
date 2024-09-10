@@ -110,7 +110,9 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
                                 const priceColor = priceChange > 0 ? 'text-red-500' : priceChange < 0 ? 'text-green-500' : 'text-gray-500';
                                 return (
                                     <TableRow key={commodity.id}>
-                                        <TableCell className="whitespace-nowrap text-xs sm:text-sm">{commodityList[commodity.id]}</TableCell>
+                                        <TableCell className="whitespace-normal break-words text-xs sm:text-sm max-w-[100px] sm:max-w-[150px]">
+                                            {commodityList[commodity.id]}
+                                        </TableCell>
                                         <TableCell className={`${priceColor} whitespace-nowrap text-xs sm:text-sm`}>
                                             {commodity.price.toFixed(2)}
                                             {priceChange !== 0 && (
