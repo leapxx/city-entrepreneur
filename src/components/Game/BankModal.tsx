@@ -79,7 +79,7 @@ const BankModal: React.FC<BankModalProps> = ({ isOpen, onClose, cash, balance, w
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="银行">
+        <Modal isOpen={isOpen} onClose={onClose} title={t('bank')}>
             <div className="space-y-4">
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
