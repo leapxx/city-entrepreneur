@@ -19,6 +19,11 @@ export function createInitialCommodities(lang: string): Commodity[] {
         { "id": "8", "name": getTranslatedName("8", lang), "price": 2000 },
         { "id": "9", "name": getTranslatedName("9", lang), "price": 150 },
         { "id": "10", "name": getTranslatedName("10", lang), "price": 800 },
+        { "id": "11", "name": getTranslatedName("11", lang), "price": 600 },
+        { "id": "12", "name": getTranslatedName("12", lang), "price": 300 },
+        { "id": "13", "name": getTranslatedName("13", lang), "price": 3500 },
+        { "id": "14", "name": getTranslatedName("14", lang), "price": 1200 },
+        { "id": "15", "name": getTranslatedName("15", lang), "price": 2500 },
     ];
 }
 

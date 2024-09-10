@@ -21,6 +21,7 @@ const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, onWork }) => {
     const [timeLeft, setTimeLeft] = useState(0);
     const workCompletedRef = useRef(false);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         return () => {
@@ -36,7 +37,8 @@ const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, onWork }) => {
 
         if (isRejected) {
             // 如果被拒绝，显示消息并不开始工作
-            alert(t('work_rejected'));
+            setError(t('work_rejected'));
+            setTimeout(() => setError(null), 3000); // 3秒后清除错误消息
             return;
         }
 
@@ -68,17 +70,25 @@ const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, onWork }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={t('work')}>
             <div className="space-y-4">
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">{t('tips')}:</strong>
+                        <span className="block sm:inline"> {error}</span>
+                    </div>
+                )}
                 {!isWorking ? (
                     <>
                         <h3 className="text-lg font-semibold">{t('available_work')}:</h3>
-                        <ul className="space-y-2">
-                            {workList.map((work) => (
-                                <li key={work.id} className="flex justify-between items-center">
-                                    <span>{t(work.nameKey)} - {work.salary}</span>
-                                    <Button onClick={() => handleSelectWork(work)}>{t('select')}</Button>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="max-h-60 overflow-y-auto">
+                            <ul className="space-y-2">
+                                {workList.map((work) => (
+                                    <li key={work.id} className="flex justify-between items-center">
+                                        <span>{t(work.nameKey)} - {work.salary}</span>
+                                        <Button onClick={() => handleSelectWork(work)}>{t('select')}</Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </>
                 ) : (
                     <div className="text-center">

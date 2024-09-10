@@ -19,65 +19,88 @@ interface BankModalProps {
 
 const BankModal: React.FC<BankModalProps> = ({ isOpen, onClose, cash, balance, wealth, loan, onDeposit, onWithdraw, onLoan, onRepay }) => {
     const { t } = useLanguage();
-    const [amount, setAmount] = useState<number>(0);
+    const [amount, setAmount] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
     const maxDeposit = cash; // 最大存款额
     const maxWithdraw = balance; // 最大取款额
     const maxLoan = wealth; // 最大贷款额
 
-    const handleDeposit = () => {
-        if (amount > maxDeposit) {
-            alert(`${t('not_enough_money')}`);
-            return;
-        }
-        onDeposit(amount);
-        setAmount(0);
+    const showError = (message: string) => {
+        setError(message);
+        setTimeout(() => setError(null), 3000); // 3秒后清除错误消息
     };
 
-    const handleWithdraw = () => {
-        if (amount > maxWithdraw) {
-            alert(`${t('not_enough_money')}`);
-            return;
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setAmount(value);
         }
-        onWithdraw(amount);
-        setAmount(0);
     };
 
-    const handleLoan = () => {
-        if (amount > maxLoan * 10) {
-            alert(`${t('not_enough_money')}`);
+    const handleAction = (action: 'deposit' | 'withdraw' | 'loan' | 'repay') => {
+        const numAmount = parseFloat(amount);
+        if (isNaN(numAmount) || numAmount <= 0) {
+            showError(t('invalid_amount'));
             return;
         }
-        onLoan(amount);
-        setAmount(0);
-    };
 
-    const handleRepay = () => {
-        if (amount > loan) {
-            alert(`${t('not_enough_money')}`);
-            return;
+        switch (action) {
+            case 'deposit':
+                if (numAmount > maxDeposit) {
+                    showError(t('insufficient_funds_to_deposit'));
+                    return;
+                }
+                onDeposit(numAmount);
+                break;
+            case 'withdraw':
+                if (numAmount > maxWithdraw) {
+                    showError(t('insufficient_funds_to_withdraw'));
+                    return;
+                }
+                onWithdraw(numAmount);
+                break;
+            case 'loan':
+                if (numAmount > maxLoan * 10) {
+                    showError(t('insufficient_funds_to_loan'));
+                    return;
+                }
+                onLoan(numAmount);
+                break;
+            case 'repay':
+                if (numAmount > loan) {
+                    showError(t('insufficient_funds_to_repay'));
+                    return;
+                }
+                onRepay(numAmount);
+                break;
         }
-        onRepay(amount);
-        setAmount(0);
+        setAmount('');
     };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="银行">
             <div className="space-y-4">
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">{t('tips')}:</strong>
+                        <span className="block sm:inline"> {error}</span>
+                    </div>
+                )}
                 <p className="text-lg">{t('bank_balance')}: {balance.toFixed(2)}</p>
                 <p className="text-lg">{t('current_cash')}: {cash.toFixed(2)}</p>
                 <p className="text-lg">{t('current_loan')}: {loan.toFixed(2)}</p>
                 <Input
-                    type="number"
+                    type="text"
                     value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
+                    onChange={handleAmountChange}
                     placeholder={t('input_amount')}
                 />
                 <div className="flex space-x-2">
-                    <Button onClick={handleDeposit}>{t('deposit')}</Button>
-                    <Button onClick={handleWithdraw}>{t('withdraw')}</Button>
-                    <Button onClick={handleLoan}>{t('loan')}</Button>
-                    <Button onClick={handleRepay}>{t('repay')}</Button>
+                    <Button onClick={() => handleAction('deposit')}>{t('deposit')}</Button>
+                    <Button onClick={() => handleAction('withdraw')}>{t('withdraw')}</Button>
+                    <Button onClick={() => handleAction('loan')}>{t('loan')}</Button>
+                    <Button onClick={() => handleAction('repay')}>{t('repay')}</Button>
                 </div>
             </div>
         </Modal>

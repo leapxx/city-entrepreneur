@@ -50,6 +50,34 @@ const events: GameEvent[] = [
     createEvent('economic', 'EVENT_TAX_INCREASE', (state: GameState) => ({
         ...state,
         market: state.market.map((c, index) => index % 2 === 0 ? { ...c, price: c.price * 1.1 } : c)
+    })),
+    createEvent('financial', 'EVENT_LOTTERY_WIN', (state: GameState) => ({
+        ...state,
+        player: { ...state.player, money: state.player.money + 50000 }
+    })),
+    createEvent('economic', 'EVENT_BUSINESS_OPPORTUNITY', (state: GameState) => ({
+        ...state,
+        player: { ...state.player, money: state.player.money * 1.2 },
+        market: state.market.map(c => ({ ...c, price: c.price * 1.05 }))
+    })),
+    createEvent('economic', 'EVENT_NATURAL_DISASTER', (state: GameState) => {
+        const affectedIndices = Array.from({ length: 3 }, () => Math.floor(Math.random() * state.market.length));
+        return {
+            ...state,
+            market: state.market.map((c, index) =>
+                affectedIndices.includes(index) ? { ...c, price: c.price * 1.3 } : c
+            )
+        };
+    }),
+    createEvent('financial', 'EVENT_TECHNOLOGICAL_BREAKTHROUGH', (state: GameState) => ({
+        ...state,
+        market: state.market.map(c => ({ ...c, price: c.price * 1.1 })),
+        player: { ...state.player, money: state.player.money * 1.1 }
+    })),
+    createEvent('economic', 'EVENT_FOREIGN_INVESTMENT', (state: GameState) => ({
+        ...state,
+        market: state.market.map(c => ({ ...c, price: c.price * 1.08 })),
+        bankAccount: { ...state.bankAccount, savings: state.bankAccount.savings * 1.05 }
     }))
 ];
 

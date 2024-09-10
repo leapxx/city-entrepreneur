@@ -57,7 +57,7 @@ export function useGame() {
 
                     return newState;
                 });
-            }, 5000); // 每5��更新一次，模拟一周
+            }, 5000); // 每5更新一次，模拟一周
 
             return () => {
                 if (timer) clearInterval(timer);
@@ -211,10 +211,7 @@ export function useGame() {
         });
     };
 
-    const heal = () => {
-        const healCost = 100;
-        const healAmount = 10;
-
+    const heal = (healCost: number, healAmount: number) => {
         setState(prevState => {
             if (prevState.player.money < healCost) {
                 return prevState;
@@ -246,7 +243,6 @@ export function useGame() {
         setState(createInitialState(language));  // 使用当前语言重新初始化游戏状态
         setGameOver(false);
         setGameWon(false);
-
         // 使用 setTimeout 来确保状态更新后再重新启动游戏
         setTimeout(() => {
             setIsRunning(true);

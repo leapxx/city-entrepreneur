@@ -99,6 +99,7 @@ const GameBoard: React.FC = () => {
                     <HospitalModal
                         isOpen={showHospitalModal}
                         onClose={() => setShowHospitalModal(false)}
+                        cash={state.player.money}
                         onHeal={heal}
                         playerHealth={state.player.health}
                     />
@@ -124,6 +125,7 @@ const GameBoard: React.FC = () => {
                         won={gameWon}
                         finalWealth={state.player.wealth}
                         finalHealth={state.player.health}
+                        finalReputation={state.player.reputation}
                         onRestart={handleRestart}
                     />
                 )}
