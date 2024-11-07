@@ -85,15 +85,18 @@ const WorkModal: React.FC<WorkModalProps> = ({ isOpen, onClose, reputation, onWo
                 {!isWorking ? (
                     <>
                         <h3 className="text-lg font-semibold">{t('available_work')}:</h3>
-                        <div className="max-h-60 overflow-y-auto">
-                            <ul className="space-y-2">
-                                {workList.map((work) => (
-                                    <li key={work.id} className="flex justify-between items-center">
-                                        <span>{t(work.nameKey)} - {work.salary}</span>
-                                        <Button onClick={() => handleSelectWork(work)}>{t('select')}</Button>
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className="relative">
+                            <div className="max-h-80 overflow-y-auto rounded-lg border border-gray-200 p-2">
+                                <ul className="space-y-2">
+                                    {workList.map((work) => (
+                                        <li key={work.id} className="flex justify-between items-center">
+                                            <span>{t(work.nameKey)} - {work.salary}</span>
+                                            <Button onClick={() => handleSelectWork(work)}>{t('select')}</Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="absolute right-0 bottom-0 h-8 w-full bg-gradient-to-t from-white to-transparent pointer-events-none" />
                         </div>
                     </>
                 ) : (

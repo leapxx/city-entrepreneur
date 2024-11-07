@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/locales/translations';
+import { cn } from '@/lib/utils';
 
 interface InventoryProps {
     inventory: InventoryItem[];
@@ -22,7 +24,7 @@ interface InventoryProps {
 }
 
 const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [quantities, setQuantities] = React.useState<{ [key: string]: string }>({});
     const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
@@ -58,61 +60,79 @@ const Inventory: React.FC<InventoryProps> = ({ inventory, market, onSell }) => {
         }
     };
 
+    const commodityList = translations[language].commodityList;
+
     return (
-        <div className="inventory bg-green-50 p-4 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-green-800">{t('inventory')}</h2>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h2 className="game-title">{t('inventory')}</h2>
+            </div>
+
             <div className="overflow-x-auto">
                 <ScrollArea className="h-[500px]">
                     <Table>
-                        <TableHeader className="sticky top-0 bg-green-50 z-10">
+                        <TableHeader className="sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10">
                             <TableRow>
-                                <TableHead className="text-green-600">{t('commodity')}</TableHead>
-                                <TableHead className="text-green-600">{t('quantity')}</TableHead>
-                                <TableHead className="text-green-600">{t('average_price')}</TableHead>
-                                <TableHead className="text-green-600 hidden md:table-cell">{t('sell_quantity')}</TableHead>
-                                <TableHead className="text-green-600">{t('operation')}</TableHead>
+                                <TableHead className="text-primary/80">{t('commodity')}</TableHead>
+                                <TableHead className="text-primary/80">{t('quantity')}</TableHead>
+                                <TableHead className="text-primary/80">{t('average_price')}</TableHead>
+                                <TableHead className="text-primary/80 hidden md:table-cell">{t('sell_quantity')}</TableHead>
+                                <TableHead className="text-primary/80">{t('operation')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {inventory.map(item => {
-                                const commodity = market.find(c => c.id === item.commodityId);
-                                return (
-                                    <TableRow key={item.commodityId}>
-                                        <TableCell>{commodity?.name}</TableCell>
-                                        <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>{item.averagePrice.toFixed(2)}</TableCell>
-                                        <TableCell className="hidden md:table-cell">
-                                            <div className="flex items-center">
+                            {inventory.map(item => (
+                                <TableRow key={item.commodityId} className="hover:bg-accent/50 transition-colors">
+                                    <TableCell className="font-medium">
+                                        {commodityList[item.commodityId]}
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {item.quantity}
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {item.averagePrice.toFixed(2)}
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center gap-2">
                                                 <Input
                                                     type="number"
                                                     value={quantities[item.commodityId] || ''}
                                                     onChange={(e) => handleQuantityChange(item.commodityId, e.target.value)}
-                                                    className={`w-12 md:w-16 lg:w-20 xl:w-24 mr-2 ${errors[item.commodityId] ? 'border-red-500' : ''}`}
+                                                    className={cn(
+                                                        "w-24",
+                                                        errors[item.commodityId] ? "border-destructive" : ""
+                                                    )}
                                                     min={0}
                                                     max={item.quantity}
                                                 />
                                                 <Button
                                                     onClick={() => handleMaxQuantity(item.commodityId)}
-                                                    className="bg-blue-500 hover:bg-blue-600 text-xs px-2 py-1"
+                                                    variant="outline"
+                                                    size="sm"
                                                 >
                                                     {t('max')}
                                                 </Button>
                                             </div>
                                             {errors[item.commodityId] && (
-                                                <p className="text-red-500 text-sm mt-1">{errors[item.commodityId]}</p>
+                                                <span className="text-destructive text-xs">
+                                                    {errors[item.commodityId]}
+                                                </span>
                                             )}
-                                        </TableCell>
-                                        <TableCell className='w-18 sm:w-20 md:w-22'>
-                                            <Button
-                                                onClick={() => handleSell(item.commodityId)}
-                                                className="bg-red-500 hover:bg-red-600 w-full text-sm px-2 py-1 mr-2"
-                                            >
-                                                {t('sell')}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            onClick={() => handleSell(item.commodityId)}
+                                            variant="game"
+                                            size="sm"
+                                            className="w-full"
+                                        >
+                                            {t('sell')}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </ScrollArea>

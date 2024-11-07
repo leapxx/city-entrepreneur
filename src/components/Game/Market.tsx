@@ -84,74 +84,83 @@ const Market: React.FC<MarketProps> = ({ market, onBuy, playerMoney }: MarketPro
     const commodityList = translations[language].commodityList;
 
     return (
-        <div className="market bg-blue-50 p-2 sm:p-4 rounded-lg">
-            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-blue-800">{t('market')}</h2>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h2 className="game-title">{t('market')}</h2>
+            </div>
+
             {buyError && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-2 sm:px-4 py-2 sm:py-3 rounded relative mb-2 sm:mb-4 text-sm sm:text-base" role="alert">
-                    <strong className="font-bold">{t('tips')}:</strong>
-                    <span className="block sm:inline"> {buyError}</span>
+                <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg relative mb-4" role="alert">
+                    <strong className="font-medium">{t('tips')}:</strong>
+                    <span className="block sm:inline ml-1">{buyError}</span>
                 </div>
             )}
+
             <div className="overflow-x-auto">
                 <ScrollArea className="h-[calc(100vh-200px)] sm:h-[500px]">
                     <Table>
-                        <TableHeader className="sticky top-0 bg-blue-50 z-10">
+                        <TableHeader className="sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10">
                             <TableRow>
-                                <TableHead className="text-blue-600 whitespace-nowrap text-xs sm:text-sm">{t('commodity')}</TableHead>
-                                <TableHead className="text-blue-600 whitespace-nowrap text-xs sm:text-sm">{t('current_price')}</TableHead>
-                                <TableHead className="text-blue-600 whitespace-nowrap hidden xl:table-cell text-xs sm:text-sm">{t('last_price')}</TableHead>
-                                <TableHead className="text-blue-600 whitespace-nowrap hidden xl:table-cell text-xs sm:text-sm">{t('quantity')}</TableHead>
-                                <TableHead className="text-blue-600 whitespace-nowrap text-xs sm:text-sm">{t('operation')}</TableHead>
+                                <TableHead className="text-primary/80">{t('commodity')}</TableHead>
+                                <TableHead className="text-primary/80">{t('current_price')}</TableHead>
+                                <TableHead className="text-primary/80 hidden xl:table-cell">{t('last_price')}</TableHead>
+                                <TableHead className="text-primary/80 hidden xl:table-cell">{t('quantity')}</TableHead>
+                                <TableHead className="text-primary/80">{t('operation')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {market.map(commodity => {
                                 const priceChange = commodity.lastPrice !== undefined ? commodity.price - commodity.lastPrice : 0;
-                                const priceColor = priceChange > 0 ? 'text-red-500' : priceChange < 0 ? 'text-green-500' : 'text-gray-500';
+                                const priceColor = priceChange > 0 ? 'text-destructive' : priceChange < 0 ? 'text-success' : 'text-muted-foreground';
                                 return (
-                                    <TableRow key={commodity.id}>
-                                        <TableCell className="whitespace-normal break-words text-xs sm:text-sm max-w-[100px] sm:max-w-[150px]">
+                                    <TableRow key={commodity.id} className="hover:bg-accent/50 transition-colors">
+                                        <TableCell className="font-medium">
                                             {commodityList[commodity.id]}
                                         </TableCell>
-                                        <TableCell className={`${priceColor} whitespace-nowrap text-xs sm:text-sm`}>
+                                        <TableCell className={`${priceColor} font-medium`}>
                                             {commodity.price.toFixed(2)}
                                             {priceChange !== 0 && (
-                                                priceChange > 0 ? <ArrowUpIcon className="inline ml-1 w-3 h-3 sm:w-4 sm:h-4" /> : <ArrowDownIcon className="inline ml-1 w-3 h-3 sm:w-4 sm:h-4" />
+                                                priceChange > 0 ?
+                                                    <ArrowUpIcon className="inline ml-1 w-4 h-4 text-destructive" /> :
+                                                    <ArrowDownIcon className="inline ml-1 w-4 h-4 text-success" />
                                             )}
                                         </TableCell>
-                                        <TableCell className="whitespace-nowrap hidden xl:table-cell text-xs sm:text-sm">
+                                        <TableCell className="hidden xl:table-cell text-muted-foreground">
                                             {commodity.lastPrice !== undefined ? `${commodity.lastPrice.toFixed(2)}` : t('no_data')}
                                         </TableCell>
                                         <TableCell className="hidden xl:table-cell">
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-2">
                                                     <Input
                                                         type="number"
                                                         value={quantities[commodity.id] || ''}
                                                         onChange={(e) => handleQuantityChange(commodity.id, e.target.value)}
                                                         className={cn(
-                                                            "w-12 md:w-16 lg:w-20 xl:w-24 mr-1 md:mr-2 text-xs sm:text-sm",
-                                                            errors[commodity.id] ? "border-red-500" : ""
+                                                            "w-24",
+                                                            errors[commodity.id] ? "border-destructive" : ""
                                                         )}
                                                         min={0}
                                                         max={Math.floor(playerMoney / commodity.price)}
                                                     />
                                                     <Button
                                                         onClick={() => handleMaxQuantity(commodity.id)}
-                                                        className="bg-blue-500 hover:bg-blue-600 text-xs px-1 md:px-2 py-1"
+                                                        variant="outline"
+                                                        size="sm"
                                                     >
                                                         {t('max')}
                                                     </Button>
                                                 </div>
                                                 {errors[commodity.id] && (
-                                                    <span className="text-red-500 text-xs mt-1">{errors[commodity.id]}</span>
+                                                    <span className="text-destructive text-xs">{errors[commodity.id]}</span>
                                                 )}
                                             </div>
                                         </TableCell>
                                         <TableCell>
                                             <Button
                                                 onClick={() => handleBuy(commodity.id)}
-                                                className="bg-green-500 hover:bg-green-600 w-full text-xs sm:text-sm px-1 sm:px-2 py-1"
+                                                variant="game"
+                                                size="sm"
+                                                className="w-full"
                                             >
                                                 {t('buy')}
                                             </Button>
